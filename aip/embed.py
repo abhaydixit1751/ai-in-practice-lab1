@@ -56,7 +56,15 @@ def _embed_uncached(texts: list[str], model: str,
     kwargs = {"model": model, "input": texts, "timeout": settings.timeout_s}
     if _supports_input_type(model):
         kwargs["input_type"] = input_type
-    resp = embedding(**kwargs)
+    for attempt in range(5):
+        try:
+            resp = embedding(**kwargs)
+            break
+        except Exception as e:
+            if ("ratelimit" in type(e).__name__.lower() or "429" in str(e) or "resource_exhausted" in str(e).lower()) and attempt < 4:
+                time.sleep(15 * (attempt + 1))
+            else:
+                raise
     pt = int(getattr(resp.usage, "prompt_tokens", 0) or 0)
     cost.record(
         cost.Usage(model, pt, 0, cost.price_of(model, pt, 0), 0.0, cached=False,
