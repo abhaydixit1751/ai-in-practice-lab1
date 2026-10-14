@@ -236,7 +236,7 @@ def answer_with_gold_context(question: str, gold_docs: list[str], *,
     for i, doc_text in enumerate(gold_docs):
         chunks.extend(markdown_chunks(doc_text, f"gold_{i}", size=400))
 
-    hits = [Hit(doc_id=c.doc_id, text=c.text, score=1.0) for c in chunks]
+    hits = [Hit(chunk=c, score=1.0) for c in chunks]
 
     context = delimit_untrusted(format_context(hits, max_chars=8000))
     prompt = f"{context}\n\nQuestion: {question}\n\nAnswer with citations:"

@@ -110,7 +110,7 @@ def judge_faithfulness(answer_text: str, context: str) -> int:
     verdict = None
     for attempt in range(5):
         try:
-            verdict = llm_judge(prompt, tier="gemini/gemini-3.8-flash")
+            verdict = llm_judge(prompt, tier="gemini/gemini-flash-lite-latest")
             break
         except Exception as exc:
             if attempt == 4:
@@ -128,7 +128,7 @@ def judge_faithfulness(answer_text: str, context: str) -> int:
 
     if verdict.get("parse_error"):
         try:
-            verdict = llm_judge(prompt, tier="gemini/gemini-3.8-flash", max_tokens=4096)
+            verdict = llm_judge(prompt, tier="gemini/gemini-flash-lite-latest", max_tokens=4096)
         except Exception:
             pass
     if verdict.get("parse_error") and (REFUSAL[:40].lower() in answer_text.lower()):
@@ -147,7 +147,7 @@ def judge_correctness(question: str, candidate: str, reference: str) -> int:
     verdict = None
     for attempt in range(5):
         try:
-            verdict = llm_judge(prompt, tier="gemini/gemini-3.8-flash")
+            verdict = llm_judge(prompt, tier="gemini/gemini-flash-lite-latest")
             break
         except Exception as exc:
             if attempt == 4:
@@ -167,7 +167,7 @@ def judge_correctness(question: str, candidate: str, reference: str) -> int:
 
     if verdict.get("parse_error"):
         try:
-            verdict = llm_judge(prompt, tier="gemini/gemini-3.8-flash", max_tokens=4096)
+            verdict = llm_judge(prompt, tier="gemini/gemini-flash-lite-latest", max_tokens=4096)
         except Exception:
             pass
     if verdict.get("parse_error"):
@@ -243,14 +243,16 @@ def run_gold_context() -> None:
 
     retrieved_scores, gold_scores = [], []
     with Budget(limit_usd=2.00, label="lab4-decomposition"):
-        for q in questions:
+        for i, q in enumerate(questions, 1):
             a = answer_question(q["question"], retriever)
-            retrieved_scores.append(
-                judge_correctness(q["question"], a.text, q["gold_answer"]) / 2)
+            ret_score = judge_correctness(q["question"], a.text, q["gold_answer"]) / 2
+            retrieved_scores.append(ret_score)
             g = answer_with_gold_context(
                 q["question"], [corpus[d] for d in q["relevant_docs"] if d in corpus])
-            gold_scores.append(
-                judge_correctness(q["question"], g.text, q["gold_answer"]) / 2)
+            gold_score = judge_correctness(q["question"], g.text, q["gold_answer"]) / 2
+            gold_scores.append(gold_score)
+            print(f"[{i:02d}/{len(questions)} {q['id']}] ret={ret_score:.2f} gold={gold_score:.2f}", flush=True)
+            time.sleep(1.0)
 
     A, B = statistics.fmean(gold_scores), statistics.fmean(retrieved_scores)
     print(f"\ncorrectness with GOLD context       A = {A:.3f}   <- generation ceiling")

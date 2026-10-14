@@ -1,0 +1,119 @@
+[
+  {
+    "id": "Q05",
+    "kind": "single_hop",
+    "mode": 6,
+    "mode_name": "generation",
+    "evidence": "generation failure: all gold docs ['policy-renewal-and-portability'] were in top-5 context (['premium-and-payments', 'life-insurance-grace-and-revival', 'policy-renewal-and-portability'])",
+    "question": "How long is the grace period for an annual policy?",
+    "answer": "The grace period for an annual policy is 30 days from the renewal due date [1][2]."
+  },
+  {
+    "id": "Q07",
+    "kind": "single_hop",
+    "mode": 7,
+    "mode_name": "presentation",
+    "evidence": "correct answer, invalid citations []",
+    "question": "What is the no-claim bonus on Gold?",
+    "answer": "The no-claim bonus on Aurora Gold is 25% of the base sum insured per claim-free year, accumulating to a maximum of 100%. This bonus is not reduced by a claim, though it stops accumulating for that specific year."
+  },
+  {
+    "id": "Q08",
+    "kind": "single_hop",
+    "mode": 6,
+    "mode_name": "generation",
+    "evidence": "generation failure: all gold docs ['exclusions'] were in top-5 context (['claims-timelines-2024-ARCHIVED', 'maternity-benefits', 'exclusions'])",
+    "question": "Can I claim for IVF treatment?",
+    "answer": "I don't have enough information in the provided sources to answer that."
+  },
+  {
+    "id": "Q10",
+    "kind": "single_hop",
+    "mode": 6,
+    "mode_name": "generation",
+    "evidence": "generation failure: all gold docs ['grievance-redressal'] were in top-5 context (['wellness-app-guide', 'claims-process', 'grievance-redressal'])",
+    "question": "Who can I escalate to if Aurora rejects my claim and their internal response is unsatisfactory?",
+    "answer": "If Aurora's final response is unsatisfactory, you may escalate to the Insurance Ombudsman for your region [3]."
+  },
+  {
+    "id": "Q11",
+    "kind": "single_hop",
+    "mode": 4,
+    "mode_name": "ranking",
+    "evidence": "ranking failure: gold doc ['claims-process'] in top 30 but not in final k (['health-faq-general', 'plan-bronze', 'plan-silver', 'plans-overview', 'network-hospitals'])",
+    "question": "How much ambulance cover is there?",
+    "answer": "Ambulance cover is ₹5,000 per hospitalisation for road ambulance only, which is common to all plans [1]."
+  },
+  {
+    "id": "Q20",
+    "kind": "multi_hop",
+    "mode": 4,
+    "mode_name": "ranking",
+    "evidence": "ranking failure: gold doc ['plans-overview'] in top 30 but not in final k (['plan-silver', 'dependents-and-family-floater', 'plan-bronze'])",
+    "question": "My mother is 63 and I want to add her to my policy. Which plans allow it and what changes?",
+    "answer": "Dependent parents can be added to Silver (at an extra premium) and Gold or Platinum plans, but they are not allowed on the Bronze plan [2]. Adding a dependent parent to a floater determines the premium by the age of the eldest member covered [3]. Additionally, if the eldest insured member is above 6"
+  },
+  {
+    "id": "Q21",
+    "kind": "multi_hop",
+    "mode": 6,
+    "mode_name": "generation",
+    "evidence": "generation failure: all gold docs ['pre-existing-conditions', 'policy-renewal-and-portability'] were in top-5 context (['pre-existing-conditions', 'maternity-benefits', 'policy-renewal-and-portability'])",
+    "question": "I am switching from another insurer. Will my 3 years of waiting period carry over if I increase my sum insured?",
+    "answer": "Your waiting periods already served will carry over only up to the sum insured of the previous policy [1][2]. Any increase in the sum insured (the incremental amount) is subject to fresh waiting periods [1][2]."
+  },
+  {
+    "id": "Q23",
+    "kind": "multi_hop",
+    "mode": 6,
+    "mode_name": "generation",
+    "evidence": "generation failure: all gold docs ['outpatient-and-wellness', 'plan-bronze'] were in top-5 context (['maternity-benefits', 'outpatient-and-wellness', 'plan-bronze'])",
+    "question": "Can I get an out-patient physiotherapy session reimbursed on Bronze?",
+    "answer": "I don't have enough information in the provided sources to answer that."
+  },
+  {
+    "id": "Q25",
+    "kind": "multi_hop",
+    "mode": 6,
+    "mode_name": "generation",
+    "evidence": "generation failure: all gold docs ['maternity-benefits', 'plan-gold'] were in top-5 context (['maternity-benefits', 'plan-gold', 'claims-process', 'plans-overview'])",
+    "question": "How much would a caesarean cost me out of pocket on Gold if the hospital bills 1,60,000?",
+    "answer": "I don't have enough information in the provided sources to answer that."
+  },
+  {
+    "id": "Q29",
+    "kind": "trap_archived",
+    "mode": 6,
+    "mode_name": "generation",
+    "evidence": "generation failure: all gold docs ['claims-timelines'] were in top-5 context (['claims-timelines-2024-ARCHIVED', 'motor-claims-timelines', 'claims-process', 'claims-timelines'])",
+    "question": "How many days do I have to respond to a query Aurora raises on my claim?",
+    "answer": "For standard claims, you have 45 days from the date of the query to respond [1]. For motor claims, the deadline is 30 days from the date of the query [4]. (Note: An archived 2024 document also lists the response deadline as 30 days) [5]."
+  },
+  {
+    "id": "Q32",
+    "kind": "aggregation",
+    "mode": 4,
+    "mode_name": "ranking",
+    "evidence": "ranking failure: gold doc ['plans-overview'] in top 30 but not in final k (['plan-bronze', 'senior-citizen-plan', 'plan-silver', 'plan-gold', 'topup-and-super-topup'])",
+    "question": "Which plans have no co-payment?",
+    "answer": "The Aurora Gold plan has no co-payment at all ages [1]. The Aurora Silver plan also has no co-payment for members below the age of 60 [2]."
+  },
+  {
+    "id": "Q37",
+    "kind": "unanswerable",
+    "mode": 4,
+    "mode_name": "ranking",
+    "evidence": "ranking failure: gold doc ['exclusions', 'plans-overview'] in top 30 but not in final k (['senior-citizen-plan', 'travel-insurance-exclusions', 'plan-silver', 'topup-and-super-topup', 'network-hospitals'])",
+    "question": "Does Aurora cover treatment in Singapore, and up to what limit?",
+    "answer": "I don't have enough information in the provided sources to answer that."
+  },
+  {
+    "id": "Q44",
+    "kind": "paraphrase",
+    "mode": 6,
+    "mode_name": "generation",
+    "evidence": "generation failure: all gold docs ['plan-silver'] were in top-5 context (['senior-citizen-plan', 'plan-silver', 'critical-illness-rider', 'plan-gold', 'topup-and-super-topup'])",
+    "question": "AUR-HI-SIL-2026 — what are the sum insured options?",
+    "answer": "I don't have enough information in the provided sources to answer that."
+  }
+]

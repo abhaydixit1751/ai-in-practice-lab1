@@ -1,0 +1,176 @@
+{
+  "experiment": "Lab 5 - RAG v2 Diagnosis, Fix, and Prove",
+  "metrics": {
+    "correctness_mean": {
+      "v1": 1.644,
+      "v2": 1.556,
+      "delta": -0.088,
+      "description": "Average correctness judge score (0-2)"
+    },
+    "correctness_rate": {
+      "v1": 0.733,
+      "v2": 0.711,
+      "delta": -0.022,
+      "description": "Fraction of questions scoring full marks (2/2)"
+    },
+    "faithfulness_mean": {
+      "v1": 1.000,
+      "v2": 0.956,
+      "delta": -0.044,
+      "description": "Average faithfulness judge score (0-1)"
+    },
+    "citation_validity": {
+      "v1": 0.978,
+      "v2": 1.000,
+      "delta": 0.022,
+      "description": "Fraction of answers with valid cited indices (repaired Q07 to 100%)"
+    },
+    "refusal_recall": {
+      "v1": 1.000,
+      "v2": 1.000,
+      "delta": 0.000,
+      "description": "Recall on genuine unanswerable questions (5/5 refused)"
+    },
+    "refusal_precision": {
+      "v1": 0.556,
+      "v2": 0.455,
+      "delta": -0.101,
+      "description": "Precision of refusals (5 genuine unanswerable out of 11 total refusals)"
+    },
+    "ndcg_at_10": {
+      "v1": 1.134,
+      "v2": 0.836,
+      "delta": -0.298,
+      "description": "nDCG@10 on relevant documents under deduplicated ranking"
+    },
+    "recall_at_5": {
+      "v1": 0.887,
+      "v2": 0.899,
+      "delta": 0.012,
+      "description": "Recall@5 on distinct relevant documents"
+    },
+    "cost_per_query_usd": {
+      "v1": 0.00028,
+      "v2": 0.00029,
+      "delta": 0.00001,
+      "description": "Average LLM API cost per query (USD), well within <= 2x baseline ceiling"
+    },
+    "p95_latency_ms": {
+      "v1": 1850,
+      "v2": 1890,
+      "delta": 40,
+      "description": "95th percentile query latency in milliseconds"
+    }
+  },
+  "diagnosis": {
+    "baseline_failures_total": 13,
+    "pareto_distribution": {
+      "mode_6_generation": {
+        "count": 8,
+        "share": 0.615,
+        "question_ids": ["Q05", "Q08", "Q10", "Q21", "Q23", "Q25", "Q29", "Q44"]
+      },
+      "mode_4_ranking": {
+        "count": 4,
+        "share": 0.308,
+        "question_ids": ["Q11", "Q20", "Q32", "Q37"]
+      },
+      "mode_7_presentation": {
+        "count": 1,
+        "share": 0.077,
+        "question_ids": ["Q07"]
+      },
+      "mode_1_missing_content": {"count": 0, "share": 0.0},
+      "mode_2_chunk_boundary": {"count": 0, "share": 0.0},
+      "mode_3_embedding_mismatch": {"count": 0, "share": 0.0},
+      "mode_5_reranker": {"count": 0, "share": 0.0}
+    }
+  },
+  "recovered_questions": [
+    {
+      "id": "Q05",
+      "kind": "single_hop",
+      "v1_score": 1,
+      "v2_score": 2,
+      "explanation": "Calibrated completeness rule ensured grace period answer included waiting period continuity."
+    },
+    {
+      "id": "Q07",
+      "kind": "single_hop",
+      "v1_score": 2,
+      "v2_score": 2,
+      "v1_cit_valid": false,
+      "v2_cit_valid": true,
+      "explanation": "Strict citation instruction repaired previously missing citation markers, achieving valid citations."
+    },
+    {
+      "id": "Q08",
+      "kind": "single_hop",
+      "v1_score": 0,
+      "v2_score": 2,
+      "explanation": "Rule 2 clarified that permanent exclusions (IVF) must be explicitly stated as not covered rather than triggering a false refusal."
+    },
+    {
+      "id": "Q21",
+      "kind": "multi_hop",
+      "v1_score": 1,
+      "v2_score": 2,
+      "explanation": "Completeness rule ensured incremental sum insured waiting period terms were fully articulated."
+    }
+  ],
+  "regressions": [
+    {
+      "id": "Q04",
+      "kind": "single_hop",
+      "v1_score": 2,
+      "v2_score": 0,
+      "explanation": "Document deduplication brought senior-citizen-plan into top 5, causing the generator to quote senior care waiting periods instead of the base policy."
+    },
+    {
+      "id": "Q20",
+      "kind": "multi_hop",
+      "v1_score": 1,
+      "v2_score": 0,
+      "explanation": "Multi-hop query: missing plans-overview from top-5 context triggered stricter Rule 1 refusal rather than partial answer."
+    },
+    {
+      "id": "Q26",
+      "kind": "multi_hop",
+      "v1_score": 2,
+      "v2_score": 0,
+      "explanation": "Deduplicating to 1 chunk per document truncated the follow-up post-hospitalisation clause from claims-process, triggering full refusal."
+    },
+    {
+      "id": "Q28",
+      "kind": "multi_hop",
+      "v1_score": 2,
+      "v2_score": 0,
+      "explanation": "Truncating multi-chunk context removed the newborn vaccination sub-limit, leading the stricter generator to refuse."
+    },
+    {
+      "id": "Q35",
+      "kind": "aggregation",
+      "v1_score": 2,
+      "v2_score": 1,
+      "explanation": "Aggregation across all documents: deduplication changed candidate document order, slightly reducing authorisations coverage."
+    }
+  ],
+  "failed_attempt": {
+    "name": "Reflex fix: Wider context (final_k=10) and relaxed prompt refusal rule",
+    "correctness_mean": 1.511,
+    "correctness_delta": -0.133,
+    "refusal_precision": 0.333,
+    "cost_per_query_usd": 0.00052,
+    "cost_delta": "+85.7%",
+    "p95_latency_ms": 3120,
+    "why_it_failed": "Relaxing refusal constraints destroyed refusal precision as the model hallucinated answers on Q36/Q38 instead of refusing. Widening context brought in conflicting archived documents on Q29 and introduced excessive distractor tokens that hurt generation accuracy."
+  },
+  "post_fix_reclassification": {
+    "remaining_failures_total": 13,
+    "distribution": {
+      "mode_4_ranking": 7,
+      "mode_6_generation": 6
+    },
+    "shift_analysis": "Fixing generation over-refusals recovered Q05, Q07, Q08, Q21. However, multi-hop questions (Q20, Q26, Q28) regressed into refusals due to single-chunk document truncation, exposing multi-hop retrieval as the true limiting bottleneck."
+  }
+}
